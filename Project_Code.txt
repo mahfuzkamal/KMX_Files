@@ -1,0 +1,89 @@
+R CODE:
+# Author: Mahfuz Kamal
+# Date: 11/19/19
+# Notes:
+install.packages("readr")
+library(readr)
+# import files
+Intermediate = read.csv("C:\\Users\\mahfu\\OneDrive\\Desktop\\R\\Replication Exercise\\Intermediate.csv")
+NonOil = read.csv("C:\\Users\\mahfu\\OneDrive\\Desktop\\R\\Replication Exercise\\Nonoil.csv")
+OECD = read.csv("C:\\Users\\mahfu\\OneDrive\\Desktop\\R\\Replication Exercise\\OECD.csv")
+# Table 2
+  # Making Models
+Table2_OECD = lm(log(OECD$GDP85)~log(OECD$IONY)+log(OECD$POPGRO+.05)+log(OECD$SCHOOL))
+Table2_Intermediate = lm(log(Intermediate$GDP85)~log(Intermediate$IONY)+log(Intermediate$POPGRO+.05)+log(Intermediate$SCHOOL))
+Table2_Nonoil = lm(log(NonOil$GDP85)~log(NonOil$IONY)+log(NonOil$POPGRO+.05)+log(NonOil$SCHOOL))
+  # Getting the data
+summary(Table2_OECD)
+summary(Table2_Intermediate)
+summary(Table2_Nonoil)
+# Table 2 Restricted
+  # Making Variables
+x1 = log(OECD$IONY) - x3
+x2 = log(OECD$SCHOOL) - x3
+x3 = log(OECD$POPGRO + .05)
+y1 = log(OECD$GDP85)
+a1 = log(Intermediate$IONY) - a3
+a2 = log(Intermediate$SCHOOL) - a3
+a3 = log(Intermediate$POPGRO + .05)
+y2 = log(Intermediate$GDP85)
+b1 = log(NonOil$IONY) - b3
+b2 = log(NonOil$SCHOOL) - b3
+b3 = log(NonOil$POPGRO + .05)
+y3 = log(NonOil$GDP85)
+  # Making Models
+RTable2_OECD = lm(y1~x1+x2)
+RTable2_Intermediate = lm(y2~a1+a2)
+RTable2_Nonoil = lm(y3~b1+b2)
+  # Getting the data
+summary(RTable2_OECD)
+summary(RTable2_Intermediate)
+summary(RTable2_Nonoil)
+# Table 3
+  # Making Models
+Table3_OECD = lm(log(OECD$GDP85)-log(OECD$GDP60)~log(OECD$GDP60))
+Table3_Intermediate = lm(log(Intermediate$GDP85)-log(Intermediate$GDP60)~log(Intermediate$GDP60))
+Table3_Nonoil = lm(log(NonOil$GDP85)-log(NonOil$GDP60)~log(NonOil$GDP60))
+  # Getting the data
+summary(Table3_OECD)
+summary(Table3_Intermediate)
+summary(Table3_Nonoil)
+# Table 4
+  # Making Models
+Table4_OECD = lm(log(OECD$GDP85)-log(OECD$GDP60)~log(OECD$GDP60)+log(OECD$IONY)+log(OECD$POPGRO+.05))
+Table4_Intermediate = lm(log(Intermediate$GDP85)-log(Intermediate$GDP60)~log(Intermediate$GDP60)+log(Intermediate$IONY)+log(Intermediate$POPGRO+.05))
+Table4_Nonoil = lm(log(NonOil$GDP85)-log(NonOil$GDP60)~log(NonOil$GDP60)+log(NonOil$IONY)+log(NonOil$POPGRO+.05))
+  # Getting the data
+summary(Table4_OECD)
+summary(Table4_Intermediate)
+summary(Table4_Nonoil)
+# Table 5
+  # Making Models
+Table5_OECD = lm(log(OECD$GDP85)-log(OECD$GDP60)~log(OECD$GDP60)+log(OECD$IONY)+log(OECD$POPGRO+.05)+log(OECD$SCHOOL))
+Table5_Intermediate = lm(log(Intermediate$GDP85)-log(Intermediate$GDP60)~log(Intermediate$GDP60)+log(Intermediate$IONY)+log(Intermediate$POPGRO+.05)+log(Intermediate$SCHOOL))
+Table5_Nonoil = lm(log(NonOil$GDP85)-log(NonOil$GDP60)~log(NonOil$GDP60)+log(NonOil$IONY)+log(NonOil$POPGRO+.05)+log(NonOil$SCHOOL))
+  # Getting the data
+summary(Table5_OECD)
+summary(Table5_Intermediate)
+summary(Table5_Nonoil)
+# Making the figures
+  # Figure A
+m = log(Intermediate$GDP85)-log(Intermediate$GDP60)
+z = log(Intermediate$GDP60)
+plot(z,m, xlab = "Log output per working age adult: 1960", ylab = "Growth rate: 1960-85", main = "A.                                                     Unconditional                                                      ")
+  # Figure B
+fitted.model1 = lm(log(Intermediate$GDP60)~log(Intermediate$IONY)+log(Intermediate$POPGRO + .05))
+residuals1 = fitted.model1$residuals 
+fitted.model2 = lm(m~log(Intermediate$IONY)+log(Intermediate$POPGRO + .05))
+residuals2 = fitted.model2$residuals
+n = mean(log(Intermediate$GDP60)) + residuals1
+o = mean(z) + residuals2
+plot(n,o, xlab = "Log output per working age adult: 1960", ylab = "Growth rate: 1960-85", main = "B.                    Conditional on saving and population growth                                ")
+  # Figure C
+fitted.model3 = lm(log(Intermediate$GDP60)~log(Intermediate$IONY)+log(Intermediate$POPGRO + .05)+log(Intermediate$SCHOOL))
+residuals3 = fitted.model3$residuals
+fitted.model4 = lm(m~log(Intermediate$IONY)+log(Intermediate$POPGRO + .05)+log(Intermediate$SCHOOL))
+residuals4 = fitted.model4$residuals
+p = mean(log(Intermediate$GDP60)) + residuals3
+q = mean(z) + residuals4
+plot(p,q, xlab = "Log output per working age adult: 1960", ylab = "Growth rate: 1960-85", main = "C.         Conditional on saving, population growth and human capital          ")
